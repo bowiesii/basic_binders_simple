@@ -1,5 +1,6 @@
 function onEdit(e) {
 
+  const thisSpreadSheet = e.source;//spreadsheetオブジェクト
   var sheetName = e.source.getSheetName();
   var gid = getGIDbysheetname(thisSpreadSheet, sheetName);
 

@@ -20,7 +20,7 @@ function wtask(e) {
 
     if (e.value.includes("#")) {
       sheet.getRange(5, 2).setValue("");
-      sheet.getRange(5, 3).setValue("文字「#」は含めないで下さい。");
+      sheet.getRange(5, 3).setValue("文字「#」は禁止です。");
       sheet.getRange(5, 3).setBackground(null);//白背景に
       return;
     }
@@ -40,7 +40,7 @@ function wtask(e) {
     }
 
     var oldsimei = userProps.getProperty("simei");
-    properties.setProperty("simei", e.value);
+    userProps.setProperty("simei", e.value);
     Logger.log("setprop " + e.value);
     sheet.getRange(5, 2).setValue("");
     sheet.getRange(5, 3).setValue("氏名入力しました。");
@@ -64,7 +64,7 @@ function wtask(e) {
 
     if (simei == null) {
       sheet.getRange(row, col).setValue(e.oldValue);
-      sheet.getRange(5, 3).setValue("氏名未入力です！" + "\n" + "（ログ記録されていません）");
+      sheet.getRange(5, 3).setValue("氏名未入力です！" + "\n" + "（ログ未記録）");
       sheet.getRange(5, 3).setBackground("red");//赤背景に
       Logger.log("no_simei_error");
 
@@ -77,11 +77,11 @@ function wtask(e) {
     }
 
     //ログを３列目メモに追加
-    var taskname = stNotNull(sheet.getRange(row, 1).getDisplayValue(), sheet.getRange(row, 2).getDisplayValue());
+    var taskname = sheet.getRange(row, 1).getDisplayValue();
     var info = sheet.getRange(row, 3).getNote();
     var info2 = sheet.getRange(row, 4).getNote();
     info = today_ymddhm + " " + simei + " " + e.oldValue + "->" + e.value + "\n" + info;
-    info2 = today_ymddhm + "##" + simei + "##" + e.oldValue + "##" + e.value + "\n" + info2;//隠し列に記録
+    info2 = today_ymddhm + "#" + simei + "#" + e.oldValue + "#" + e.value + "\n" + info2;//隠し列に記録
     Logger.log(info);
     sheet.getRange(row, 3).setNote(info);
     sheet.getRange(row, 4).setNote(info2);//隠し列

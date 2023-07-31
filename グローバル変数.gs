@@ -1,7 +1,4 @@
-const thisFileId = "1sEKCFs6oNzbEkRgt2Z2aq_4mOGQXMU7dcFTXPNYf-wg";//スプシファイルID
-const thisSpreadSheet = SpreadsheetApp.openById(thisFileId);
-
-const gid_wtask1 = "1616634719";//週タスク１
+const gid_wtask1 = "1616634719";//週タスク１のGID
 const gid_wtask2 = "2097376321";//週タスク２
 const gid_wtask3 = "1024816661";//週タスク３
 
