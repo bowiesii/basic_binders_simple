@@ -64,7 +64,7 @@ function wtask(e) {
 
     if (simei == null) {
       sheet.getRange(row, col).setValue(e.oldValue);
-      sheet.getRange(5, 3).setValue("氏名未入力です！" + "\n" + "（ログ未記録）");
+      sheet.getRange(5, 3).setValue("氏名未入力です！" + "\n" + "(ログ未記録)");
       sheet.getRange(5, 3).setBackground("red");//赤背景に
       Logger.log("no_simei_error");
 
@@ -85,7 +85,7 @@ function wtask(e) {
     Logger.log(info);
     sheet.getRange(row, 3).setNote(info);
     sheet.getRange(row, 4).setNote(info2);//隠し列
-    sheet.getRange(5, 3).setValue("ログ記録しました。（" + taskname + "）");
+    sheet.getRange(5, 3).setValue(taskname + "(" + simei + ")" + "ログ済");
     sheet.getRange(5, 3).setBackground(null);//白背景に
 
     return;
