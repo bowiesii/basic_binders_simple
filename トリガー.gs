@@ -2,7 +2,7 @@ function onEdit(e) {
 
   const thisSpreadSheet = e.source;//spreadsheetオブジェクト
   var sheetName = e.source.getSheetName();
-  var gid = getGIDbysheetname(thisSpreadSheet, sheetName);
+  var gid = myLibrary.getGIDbysheetname(thisSpreadSheet, sheetName);
 
   //多数のセルに同時に代入されたとき対策？？→Rangeはわかるがoldvalueは分からないらしい。
 

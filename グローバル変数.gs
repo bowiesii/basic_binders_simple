@@ -16,8 +16,8 @@ const today_ymdd = today_ymd + " " + today_wjpn;
 const today_hm = Utilities.formatDate(today, 'JST', 'HH:mm');
 const today_ymddhm = today_ymdd + " " + today_hm;
 
-//ユーザープロパティ
-var userProps = PropertiesService.getUserProperties();
+const userProps = PropertiesService.getUserProperties();
+
 
 
 
