@@ -1,6 +1,6 @@
 function wtask(e) {
 
-  var sheet_temp1 = myLibrary.getSheetBySperadGid(e.source, gid_temp1);//ログ用隠しシート
+  var sheet_temp1 = getSheetBySperadGid(e.source, gid_temp1);//ログ用隠しシート
   var sheet = e.source.getActiveSheet();
   var row = e.range.getRow();
   var col = e.range.getColumn();
