@@ -1,5 +1,6 @@
 function wtask(e) {
 
+  var sheet_temp1 = myLibrary.getSheetBySperadGid(e.source, gid_temp1);//ログ用隠しシート
   var sheet = e.source.getActiveSheet();
   var row = e.range.getRow();
   var col = e.range.getColumn();
@@ -11,10 +12,14 @@ function wtask(e) {
   if (row == 5 && col == 2) {
 
     if (e.value == "null") {
+      var oldsimei = userProps.getProperty("simei");
       userProps.deleteProperty("simei");//他のユーザーまでリセットされるわけではない
       sheet.getRange(5, 2).setValue("");
       sheet.getRange(5, 3).setValue("リセットしました。");
       sheet.getRange(5, 3).setBackground(null);//白背景に
+      //入力氏名をメモ(ｗシート１にまとめる)
+      var simei_log = sheet_temp1.getRange(1, 2).getValue();
+      sheet_temp1.getRange(1, 2).setValue(today_ymddhm + "#" + oldsimei + "#null" + "\n" + simei_log);
       return;
     }
 
@@ -43,13 +48,16 @@ function wtask(e) {
     userProps.setProperty("simei", e.value);
     Logger.log("setprop " + e.value);
     sheet.getRange(5, 2).setValue("");
-    sheet.getRange(5, 3).setValue("氏名入力しました。");
+    if (oldsimei == null) {
+      sheet.getRange(5, 3).setValue("氏名設定済(" + e.value + ")");
+    } else {
+      sheet.getRange(5, 3).setValue("氏名変更(" + oldsimei + "→" + e.value + ")");
+    }
     sheet.getRange(5, 3).setBackground(null);//白背景に
 
-    //入力氏名をメモ
-    var simei_log = sheet.getRange(5, 4).getNote();
-    simei_log = stRowCut(simei_log, 99);//行数制限
-    sheet.getRange(5, 4).setNote(today_ymddhm + "##" + oldsimei + "##" + e.value + "##" + "\n" + simei_log);
+    //入力氏名をメモ(ｗシート１にまとめる)
+    var simei_log = sheet_temp1.getRange(1, 2).getValue();
+    sheet_temp1.getRange(1, 2).setValue(today_ymddhm + "#" + oldsimei + "#" + e.value + "\n" + simei_log);
 
     return;
 
@@ -68,10 +76,9 @@ function wtask(e) {
       sheet.getRange(5, 3).setBackground("red");//赤背景に
       Logger.log("no_simei_error");
 
-      //氏名未入力エラーをメモ
-      var simei_log = sheet.getRange(5, 4).getNote();
-      simei_log = stRowCut(simei_log, 99);//行数制限
-      sheet.getRange(5, 4).setNote(today_ymddhm + "#氏名未入力#" + row + "#" + col + "\n" + simei_log);
+      //氏名未入力エラーをメモ(ｗシート１にまとめる)
+      var simei_log = sheet_temp1.getRange(1, 2).getValue();
+      sheet_temp1.getRange(1, 2).setValue(today_ymddhm + "#氏名未入エラー" + "\n" + simei_log);
 
       return;
     }

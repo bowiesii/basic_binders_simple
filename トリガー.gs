@@ -4,10 +4,8 @@ function onEdit(e) {
   var sheetName = e.source.getSheetName();
   var gid = myLibrary.getGIDbysheetname(thisSpreadSheet, sheetName);
 
-  //多数のセルに同時に代入されたとき対策？？→Rangeはわかるがoldvalueは分からないらしい。
-
-  //ソースのシートgidでfunctionを分けていく。
-  if (gid == gid_wtask1 || gid == gid_wtask2 || gid == gid_wtask3) {
+  //ソースのシートgidで振り分け
+  if (gid == gid_wtask1 || gid == gid_wtask2 || gid == gid_wtask3) {//週タスク
     wtask(e);
   }
 
