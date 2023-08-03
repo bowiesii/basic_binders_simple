@@ -6,8 +6,8 @@ const gid_wtask2 = "2097376321";//週タスク２
 const gid_wtask3 = "1024816661";//週タスク３
 const gid_fresh = "1405667253";//鮮度
 
-const gid_h_simei = "402406560";//h_氏名
-const gid_h_wtask = "997759008";//h_週タスク
+const gid_h_simei = "402406560";//h_氏名今日
+const gid_h_wtask = "997759008";//h_週タスク今日
 const gid_h_fresh = "1413518585";//h_鮮度
 
 //本日日付定義

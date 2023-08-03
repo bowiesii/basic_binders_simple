@@ -74,14 +74,14 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
 
 }
 
-//ログにary行数分記入する。（★新しいのが上）
+//ログにary行数分記入（★新しいのが上）
 //シート、★挿入行（普通は２行目～）、行列（★２次元）、列数（列数に変動があるとエラーになるため定義してほしい）
 //※insertrowsやdeleterowsは保護シートでは機能しないため使えない
-function addLogFirst(sheet, rowNum, ary, colNum) {
+function addLogFirst(sheet, rowNum, ary, colNum, maxRow) {
   sheet.insertRowsBefore(rowNum, ary.length);
   sheet.getRange(rowNum, 1, ary.length, colNum).setValues(ary);
-  if (sheet.getLastRow() >= 1000) {
-    sheet.deleteRows(1000, sheet.getLastRow() - 999);//1000行以上なら1000行目以降を削除して999行に。
+  if (sheet.getLastRow() >= maxRow + 1) {
+    sheet.deleteRows(maxRow + 1, sheet.getLastRow() - maxRow);//maxRow以上ならmaxRow+1以降（古いの）を削除
   }
 }
 
