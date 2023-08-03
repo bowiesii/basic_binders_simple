@@ -1,89 +1,37 @@
 function wtask(e) {
 
-  var sheet_temp1 = getSheetBySperadGid(e.source, gid_temp1);//ログ用隠しシート
   var sheet = e.source.getActiveSheet();
   var row = e.range.getRow();
   var col = e.range.getColumn();
   var bgc = sheet.getRange(row, col).getBackground();
   if (bgc == "#b7b7b7") { return; }//灰色ならスルー
   if (e.value == e.oldValue) { return; }
+  var sheetlog = getSheetBySperadGid(e.source, gid_h_wtask);//h_週タスク
 
   //氏名手動入力
   if (row == 5 && col == 2) {
-
-    if (e.value == "null") {
-      var oldsimei = userProps.getProperty("simei");
-      userProps.deleteProperty("simei");//他のユーザーまでリセットされるわけではない
-      sheet.getRange(5, 2).setValue("");
-      sheet.getRange(5, 3).setValue("リセットしました。");
-      sheet.getRange(5, 3).setBackground(null);//白背景に
-      //入力氏名をメモ(ｗシート１にまとめる)
-      var simei_log = sheet_temp1.getRange(1, 2).getValue();
-      sheet_temp1.getRange(1, 2).setValue(today_ymddhm + "#" + oldsimei + "#null" + "\n" + simei_log);
-      return;
-    }
-
-    if (e.value.includes("#")) {
-      sheet.getRange(5, 2).setValue("");
-      sheet.getRange(5, 3).setValue("文字「#」は禁止です。");
-      sheet.getRange(5, 3).setBackground(null);//白背景に
-      return;
-    }
-
-    if (e.value.includes("\n")) {
-      sheet.getRange(5, 2).setValue("");
-      sheet.getRange(5, 3).setValue("改行は含めないで下さい。");
-      sheet.getRange(5, 3).setBackground(null);//白背景に
-      return;
-    }
-
-    if (e.value.length <= 1 || e.value.length >= 9) {
-      sheet.getRange(5, 2).setValue("");
-      sheet.getRange(5, 3).setValue("２～８文字で指定下さい。");
-      sheet.getRange(5, 3).setBackground(null);//白背景に
-      return;
-    }
-
-    var oldsimei = userProps.getProperty("simei");
-    userProps.setProperty("simei", e.value);
-    Logger.log("setprop " + e.value);
-    sheet.getRange(5, 2).setValue("");
-    if (oldsimei == null) {
-      sheet.getRange(5, 3).setValue("氏名設定済(" + e.value + ")");
-    } else {
-      sheet.getRange(5, 3).setValue("氏名変更(" + oldsimei + "→" + e.value + ")");
-    }
-    sheet.getRange(5, 3).setBackground(null);//白背景に
-
-    //入力氏名をメモ(ｗシート１にまとめる)
-    var simei_log = sheet_temp1.getRange(1, 2).getValue();
-    sheet_temp1.getRange(1, 2).setValue(today_ymddhm + "#" + oldsimei + "#" + e.value + "\n" + simei_log);
-
+    simeiFunc("", e.value, e.source, sheet, 5, 2, 5, 3);
     return;
-
   }
 
+  var simei = userProps.getProperty("simei");
+  Logger.log("getprop " + simei);
 
-  //氏名自動入力（２列のみ）
-  if (col == 2) {
+  if (simei == null) {//氏名未入力エラー
+    sheet.getRange(row, col).setValue(e.oldValue);//元に戻す
+    simeiFunc("未入力", "", e.source, sheet, 5, 2, 5, 3);
+    return;
+  }
 
-    var simei = userProps.getProperty("simei");
-    Logger.log("getprop " + simei);
+  if (col == 1) {//タスク列の編集
+    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "タスク列の編集 " + e.oldValue + "->" + e.value, "", "", ""]];
+    addLogLast(sheetlog, logary, 7);
+    return;
+  }
 
-    if (simei == null) {
-      sheet.getRange(row, col).setValue(e.oldValue);
-      sheet.getRange(5, 3).setValue("氏名未入力です！" + "\n" + "(ログ未記録)");
-      sheet.getRange(5, 3).setBackground("red");//赤背景に
-      Logger.log("no_simei_error");
+  if (col == 2) {//進捗の編集
 
-      //氏名未入力エラーをメモ(ｗシート１にまとめる)
-      var simei_log = sheet_temp1.getRange(1, 2).getValue();
-      sheet_temp1.getRange(1, 2).setValue(today_ymddhm + "#氏名未入エラー" + "\n" + simei_log);
-
-      return;
-    }
-
-    //ログを３列目メモに追加
+    //ログ→当該シートのメモ
     var taskname = sheet.getRange(row, 1).getDisplayValue();
     var info = sheet.getRange(row, 3).getNote();
     var info2 = sheet.getRange(row, 4).getNote();
@@ -95,8 +43,16 @@ function wtask(e) {
     sheet.getRange(5, 3).setValue(taskname + "(" + simei + ")" + "ログ済");
     sheet.getRange(5, 3).setBackground(null);//白背景に
 
+    //ログ→h_週タスク
+    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "進捗", sheet.getRange(row, 1).getDisplayValue(), e.oldValue, e.value]];
+    addLogLast(sheetlog, logary, 7);
     return;
+  }
 
+  if (col == 3) {//備考欄の編集
+    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "備考欄の編集 " + e.oldValue + "->" + e.value, "", "", ""]];
+    addLogLast(sheetlog, logary, 7);
+    return;
   }
 
 }

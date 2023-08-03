@@ -1,9 +1,14 @@
 //基本バインダー
 const id_basic_binders = "1sEKCFs6oNzbEkRgt2Z2aq_4mOGQXMU7dcFTXPNYf-wg";
+
 const gid_wtask1 = "1616634719";//週タスク１のGID
 const gid_wtask2 = "2097376321";//週タスク２
 const gid_wtask3 = "1024816661";//週タスク３
-const gid_temp1 = "784701966";//temp1（隠しシート）
+const gid_fresh = "1405667253";//鮮度
+
+const gid_h_simei = "402406560";//h_氏名
+const gid_h_wtask = "997759008";//h_週タスク
+const gid_h_fresh = "1413518585";//h_鮮度
 
 //本日日付定義
 //const today = new Date("2023/7/2");
