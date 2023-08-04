@@ -6,6 +6,7 @@ function wtask(e) {
   var bgc = sheet.getRange(row, col).getBackground();
   if (bgc == "#b7b7b7") { return; }//灰色ならスルー
   if (e.value == e.oldValue) { return; }
+
   var sheetlog = getSheetBySperadGid(e.source, gid_h_wtask);//h_週タスク
 
   //氏名手動入力

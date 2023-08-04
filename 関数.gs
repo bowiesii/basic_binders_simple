@@ -74,6 +74,18 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
 
 }
 
+//シート１（降順）の２行以下全部→シート２（昇順）の２行以下の先頭へログを移動（シート１の２行以下はクリア）
+function replaceLogFirst(sheet1, sheet2) {
+  var didnum = sheet1.getLastRow() - 1;//移動させるログの数
+  if (didnum >= 1) {
+    var range = sheet1.getRange(2, 1, didnum, sheet1.getLastColumn());
+    var logary = range.getDisplayValues().reverse();//降順→昇順なのでreverseで行逆転
+    addLogFirst(sheet2, 2, logary, sheet1.getLastColumn(), 10000);
+    //クリア
+    range.clearContent();
+  }
+}
+
 //ログにary行数分記入（★新しいのが上）
 //シート、★挿入行（普通は２行目～）、行列（★２次元）、列数（列数に変動があるとエラーになるため定義してほしい）
 //※insertrowsやdeleterowsは保護シートでは機能しないため使えない
@@ -94,11 +106,11 @@ function addLogLast(sheet, ary, colNum) {
 
 //文字列の指定行数「より後ろ」をカットする（そんなに行数なければスルーして同じ文字列返す）
 //st=文字列、row=行数、結果はrow行になる。
-function stRowCut(st, row) {
+function stRowCut(st, maxRow) {
   var output = "";
   var st_ary = st.split(/\r\n|\n/);
-  if (st_ary.length >= row + 1) {
-    st_ary.splice(row, st_ary.length - row);
+  if (st_ary.length >= maxRow + 1) {
+    st_ary.splice(maxRow, st_ary.length - maxRow);
     for (var r = 0; r <= st_ary.length - 1; r++) {
       output = output + st_ary[r] + "\n";
     }
