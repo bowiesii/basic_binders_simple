@@ -14,7 +14,7 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
     Logger.log("no_simei_error");
 
     //ログ
-    var logary = [[today_ymddhm, "未入力", "", "", sheet.getSheetId()]];
+    var logary = [[today_ymddhm, "未入力", "", "", sheet.getSheetName()]];
     addLogLast(logsheet, logary, 5);
 
   } else {//氏名入力欄に入力された場合
@@ -26,7 +26,7 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
       notifyRan.setValue("リセットしました。");
       notifyRan.setBackground(null);//白背景に
       //ログ
-      var logary = [[today_ymddhm, "リセット", oldsimei, "", sheet.getSheetId()]];
+      var logary = [[today_ymddhm, "リセット", oldsimei, "", sheet.getSheetName()]];
       addLogLast(logsheet, logary, 5);
       return;
     }
@@ -60,12 +60,12 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
     if (oldsimei == null) {
       notifyRan.setValue("氏名設定済(" + input + ")");
       //ログ
-      var logary = [[today_ymddhm, "新規", "", input, sheet.getSheetId()]]
+      var logary = [[today_ymddhm, "新規", "", input, sheet.getSheetName()]]
       addLogLast(logsheet, logary, 5);
     } else {
       notifyRan.setValue("氏名変更(" + oldsimei + "→" + input + ")");
       //ログ
-      var logary = [[today_ymddhm, "変更", oldsimei, input, sheet.getSheetId()]]
+      var logary = [[today_ymddhm, "変更", oldsimei, input, sheet.getSheetName()]]
       addLogLast(logsheet, logary, 5);
     }
     notifyRan.setBackground(null);//白背景に
