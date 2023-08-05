@@ -129,7 +129,7 @@ function stRowCut(st, maxRow) {
 function getGIDbysheetname(spreadSheet, sheetName) {
 
   for (let sheet of spreadSheet.getSheets()) {
-    if (sheet.getSheetName() === sheetName) {
+    if (sheet.getSheetName() == sheetName) {
       return sheet.getSheetId();
     }
   }
