@@ -74,12 +74,12 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
 
 }
 
-//シート１（降順）の２行以下全部→シート２（昇順）の２行以下の先頭へログを移動（シート１の２行以下はクリア）
+//シート１（降順）の２行以下全部→シート２（昇順）の２行以下の先頭へログを移動（シート１の２行以下は★クリア）
 function replaceLogFirst(sheet1, sheet2) {
   var didnum = sheet1.getLastRow() - 1;//移動させるログの数
-  if (didnum >= 1) {
+  if (didnum >= 1) {//0だとgetrangeがエラーになるので
     var range = sheet1.getRange(2, 1, didnum, sheet1.getLastColumn());
-    var logary = range.getDisplayValues().reverse();//降順→昇順なのでreverseで行逆転
+    var logary = range.getDisplayValues().reverse();//降順→昇順なのでreverseで★行逆転
     addLogFirst(sheet2, 2, logary, sheet1.getLastColumn(), 10000);
     //クリア
     range.clearContent();
@@ -90,10 +90,12 @@ function replaceLogFirst(sheet1, sheet2) {
 //シート、★挿入行（普通は２行目～）、行列（★２次元）、列数（列数に変動があるとエラーになるため定義してほしい）
 //※insertrowsやdeleterowsは保護シートでは機能しないため使えない
 function addLogFirst(sheet, rowNum, ary, colNum, maxRow) {
-  sheet.insertRowsBefore(rowNum, ary.length);
-  sheet.getRange(rowNum, 1, ary.length, colNum).setValues(ary);
-  if (sheet.getLastRow() >= maxRow + 1) {
-    sheet.deleteRows(maxRow + 1, sheet.getLastRow() - maxRow);//maxRow以上ならmaxRow+1以降（古いの）を削除
+  if (ary.length >= 1) {//0だとエラーになるので
+    sheet.insertRowsBefore(rowNum, ary.length);
+    sheet.getRange(rowNum, 1, ary.length, colNum).setValues(ary);
+    if (sheet.getLastRow() >= maxRow + 1) {
+      sheet.deleteRows(maxRow + 1, sheet.getLastRow() - maxRow);//maxRow以上ならmaxRow+1以降（古いの）を削除
+    }
   }
 }
 
@@ -101,7 +103,9 @@ function addLogFirst(sheet, rowNum, ary, colNum, maxRow) {
 //ログにary行数分記入（★新しいのが下）
 //シート、行列（★２次元）、列数（列数に変動があるとエラーになるため定義してほしい）
 function addLogLast(sheet, ary, colNum) {
-  sheet.getRange(sheet.getLastRow() + 1, 1, ary.length, colNum).setValues(ary);
+  if (ary.length >= 1) {//0だとエラーになるので
+    sheet.getRange(sheet.getLastRow() + 1, 1, ary.length, colNum).setValues(ary);
+  }
 }
 
 //文字列の指定行数「より後ろ」をカットする（そんなに行数なければスルーして同じ文字列返す）
@@ -121,6 +125,7 @@ function stRowCut(st, maxRow) {
 }
 
 //スプシオブジェクト、シート名→gid（トリガーからGIDで振り分けるのに使う。シート名は変えられるため）
+//シート名が含まれなければnull
 function getGIDbysheetname(spreadSheet, sheetName) {
 
   for (let sheet of spreadSheet.getSheets()) {
@@ -131,6 +136,7 @@ function getGIDbysheetname(spreadSheet, sheetName) {
 
   return null;
 }
+
 
 //id,gid →シートオブジェクト
 function getSheetByIdGid(id, gid) {

@@ -17,5 +17,8 @@ function onEdit(e) {
     fcheck(e);
   }
 
+  //新人表用（セル内容で判断、原本はスルー）
+
+
 
 }
