@@ -47,7 +47,7 @@ function sinjin(e) {
     sheet.getRange(4, 3).setBackground(null);//白背景に
 
     //ログ→h_新人
-    var logary = [[today_ymddhm, simei, sheet.getRange(2, 2).getDisplayValue(), "進捗", taskname, e.oldValue, e.value]];
+    var logary = [[today_ymddhm, simei, sheet.getRange(2, 2).getDisplayValue(), "習得度", taskname, e.oldValue, e.value]];
     addLogLast(sheetlog, logary, 7);
     return;
   }
