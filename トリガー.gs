@@ -3,7 +3,7 @@ function onEdit(e) {
   var sheetName = e.source.getSheetName();
   var gid = getGIDbysheetname(e.source, sheetName);//e.sourceはこのスプレッドリートオブジェクト
 
-  //編集カウント
+  //編集カウント（管理者除く）
   if (e.user.getEmail() != "youseimale@gmail.com") {
     editCount(e);
   }
@@ -17,7 +17,9 @@ function onEdit(e) {
     fcheck(e);
   }
 
-  //新人表用（シート名で判断）
+  if(sheetName.includes("【新】")){//新人表用（シート名で判断）
+    sinjin(e);
+  }
 
 
 

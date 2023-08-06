@@ -25,15 +25,16 @@ function wtask(e) {
   }
 
   if (col == 1) {//タスク列の編集
-    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "タスク列の編集 " + e.oldValue + "->" + e.value, "", "", ""]];
+    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "タスク列の編集 " + e.oldValue + "->" + e.value + " 行：" + row, "", "", ""]];
     addLogLast(sheetlog, logary, 7);
     return;
   }
 
+  var taskname = sheet.getRange(row, 1).getDisplayValue();//タスク名
+
   if (col == 2) {//進捗の編集
 
     //ログ→当該シートのメモ
-    var taskname = sheet.getRange(row, 1).getDisplayValue();
     var info = sheet.getRange(row, 3).getNote();
     var info2 = sheet.getRange(row, 4).getNote();
     info = today_ymddhm + " " + simei + " " + e.oldValue + "->" + e.value + "\n" + info;
@@ -45,13 +46,13 @@ function wtask(e) {
     sheet.getRange(5, 3).setBackground(null);//白背景に
 
     //ログ→h_週タスク
-    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "進捗", sheet.getRange(row, 1).getDisplayValue(), e.oldValue, e.value]];
+    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "進捗", taskname, e.oldValue, e.value]];
     addLogLast(sheetlog, logary, 7);
     return;
   }
 
   if (col == 3) {//備考欄の編集
-    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "備考欄の編集 " + e.oldValue + "->" + e.value, "", "", ""]];
+    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "備考欄の編集 " + e.oldValue + "->" + e.value + " 行：" + taskname, "", "", ""]];
     addLogLast(sheetlog, logary, 7);
     return;
   }
