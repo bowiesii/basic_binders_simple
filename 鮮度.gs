@@ -7,7 +7,7 @@ function fcheck(e) {
   if (bgc == "#b7b7b7") { return; }//灰色ならスルー
   if (e.value == e.oldValue) { return; }
 
-  var sheetkasyo = getSheetBySperadGid(e.source, gid_h_fcheckPlace);//h_鮮度箇所
+  var sheetkasyo = getSheetBySperadGid(e.source, gid_h_place);//h_地図箇所
   var sheetlog = getSheetBySperadGid(e.source, gid_h_fcheck);//h_鮮度今日
 
   //氏名手動入力

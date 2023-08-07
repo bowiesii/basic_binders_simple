@@ -1,77 +1,23 @@
 //※シンプルトリガーは編集不可ライブラリは使えない
 
-//氏名関連 オプション（未入力の場合"未入力"）、入力された氏名、スプシ、シート、氏名入力欄(rc)、通知欄(rc)
-function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
-
-  var simeiRan = sheet.getRange(sR, sC);
-  var notifyRan = sheet.getRange(nR, nC);
-  var logsheet = getSheetBySperadGid(spreadSheet, gid_h_simei);
-
-  if (opt == "未入力") {//氏名が未入力だったとき
-
-    notifyRan.setValue("氏名未入力です！" + "\n" + "(ログ未記録)");
-    notifyRan.setBackground("red");//赤背景に
-    Logger.log("no_simei_error");
-
-    //ログ
-    var logary = [[today_ymddhm, "未入力", "", "", sheet.getSheetName()]];
-    addLogLast(logsheet, logary, 5);
-
-  } else {//氏名入力欄に入力された場合
-
-    if (input == "null") {
-      var oldsimei = userProps.getProperty("simei");
-      userProps.deleteProperty("simei");//他のユーザーまでリセットされるわけではない
-      simeiRan.setValue("");
-      notifyRan.setValue("リセットしました。");
-      notifyRan.setBackground(null);//白背景に
-      //ログ
-      var logary = [[today_ymddhm, "リセット", oldsimei, "", sheet.getSheetName()]];
-      addLogLast(logsheet, logary, 5);
-      return;
-    }
-
-    if (input.includes("#")) {
-      simeiRan.setValue("");
-      notifyRan.setValue("文字「#」は禁止です。");
-      notifyRan.setBackground(null);//白背景に
-      return;
-    }
-
-    if (input.includes("\n")) {
-      simeiRan.setValue("");
-      notifyRan.setValue("改行は含めないで下さい。");
-      notifyRan.setBackground(null);//白背景に
-      return;
-    }
-
-    if (input.length <= 1 || input.length >= 9) {
-      simeiRan.setValue("");
-      notifyRan.setValue("２～８文字で指定下さい。");
-      notifyRan.setBackground(null);//白背景に
-      return;
-    }
-
-    //以下、普通に氏名入力された場合
-    var oldsimei = userProps.getProperty("simei");
-    userProps.setProperty("simei", input);
-    Logger.log("setprop " + input);
-    simeiRan.setValue("");
-    if (oldsimei == null) {
-      notifyRan.setValue("氏名設定済(" + input + ")");
-      //ログ
-      var logary = [[today_ymddhm, "新規", "", input, sheet.getSheetName()]]
-      addLogLast(logsheet, logary, 5);
-    } else {
-      notifyRan.setValue("氏名変更(" + oldsimei + "→" + input + ")");
-      //ログ
-      var logary = [[today_ymddhm, "変更", oldsimei, input, sheet.getSheetName()]]
-      addLogLast(logsheet, logary, 5);
-    }
-    notifyRan.setBackground(null);//白背景に
-
+//シート内の特定列の★２行以下のなかに特定文字列があるか
+//ある→シートの行数（２～）を返す。ない→-1、stringがnull→-1
+function searchInCol(sheet, col, string) {
+  if (string == null) {
+    return -1;
   }
-
+  var dataNum = sheet.getLastRow() - 1;
+  if (dataNum >= 1) {//これしないとgetrangeでエラー
+    var ary = sheet.getRange(2, col, dataNum, 1).getValues();//二次元配列になってる
+    for (let r = 0; r <= ary.length - 1; r++) {
+      if (ary[r][0] == string) {
+        return r + 2;
+      }
+    }
+    return -1;
+  } else {
+    return -1;
+  }
 }
 
 //シート１（降順）の２行以下全部→シート２（昇順）の２行以下の先頭へログを移動（シート１の２行以下は★クリア）
