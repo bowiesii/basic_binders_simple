@@ -45,10 +45,15 @@ function addLogFirst(sheet, rowNum, ary, colNum, maxRow) {
   }
 }
 
-//保護シートでも機能する関数（★事前に十分な行数を用意する前提。）
+//保護シートでも機能する関数（★事前に十分な行数を用意する前提。→1001行以上になる場合スルー）
 //ログにary行数分記入（★新しいのが下）
 //シート、行列（★２次元）、列数（列数に変動があるとエラーになるため定義してほしい）
 function addLogLast(sheet, ary, colNum) {
+  var afterRow = sheet.getLastRow() + ary.length;
+  if (afterRow >= 1001) {
+    Logger.log("シートが1000行以上になるため記録不可");
+    return;
+  }
   if (ary.length >= 1) {//0だとエラーになるので
     sheet.getRange(sheet.getLastRow() + 1, 1, ary.length, colNum).setValues(ary);
   }

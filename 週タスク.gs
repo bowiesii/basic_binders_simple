@@ -7,7 +7,7 @@ function wtask(e) {
   if (bgc == "#b7b7b7") { return; }//灰色ならスルー
   if (e.value == e.oldValue) { return; }
 
-  var sheetlog = getSheetBySperadGid(e.source, gid_h_wtask);//h_週タスク
+  var sheetlog = getSheetBySperadGid(e.source, gid_h_log);//統合ログ
 
   //氏名手動入力
   if (row == 5 && col == 2) {
@@ -24,9 +24,12 @@ function wtask(e) {
     return;
   }
 
+  //管理者だったら、氏名以外トリガーしない
+  if (e.user.getEmail() == "youseimale@gmail.com") { return; }
+
   if (col == 1) {//タスク列の編集
-    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "タスク列の編集 " + e.oldValue + "->" + e.value + " 行：" + row, "", "", ""]];
-    addLogLast(sheetlog, logary, 7);
+    var logary = [today_ymddhm, simei, sheet.getSheetName(), "タスク列編集", "", e.oldValue, e.value, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 10);
     return;
   }
 
@@ -45,15 +48,15 @@ function wtask(e) {
     sheet.getRange(5, 3).setValue(taskname + "(" + simei + ")" + "ログ済");
     sheet.getRange(5, 3).setBackground(null);//白背景に
 
-    //ログ→h_週タスク
-    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "進捗", taskname, e.oldValue, e.value]];
-    addLogLast(sheetlog, logary, 7);
+    //一時ログ
+    var logary = [today_ymddhm, simei, sheet.getSheetName(), "進捗", taskname, e.oldValue, e.value, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 10);
     return;
   }
 
   if (col == 3) {//備考欄の編集
-    var logary = [[today_ymddhm, simei, sheet.getRange(3, 2).getDisplayValue(), "備考欄の編集 " + e.oldValue + "->" + e.value + " 行：" + taskname, "", "", ""]];
-    addLogLast(sheetlog, logary, 7);
+    var logary = [today_ymddhm, simei, sheet.getSheetName(), "備考欄編集", taskname, e.oldValue, e.value, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 10);
     return;
   }
 

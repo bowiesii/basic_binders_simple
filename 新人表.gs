@@ -22,16 +22,19 @@ function sinjin(e) {
     return;
   }
 
+  //管理者だったら、氏名以外トリガーしない
+  if (e.user.getEmail() == "youseimale@gmail.com") { return; }
+
   sheet.getRange(3, 4).setValue(today_ymd);//最終更新を記録
-  var sheetlog = getSheetBySperadGid(e.source, gid_h_sinjin);//h_新人
+  var sheetlog = getSheetBySperadGid(e.source, gid_h_log);//一時ログ
 
   if (col == 1) {//スキル列の編集
-    var logary = [[today_ymddhm, simei, sheet.getRange(2, 2).getDisplayValue(), "スキル列の編集 " + e.oldValue + "->" + e.value + " 行：" + row, "", "", ""]];
-    addLogLast(sheetlog, logary, 7);
+    var logary = [today_ymddhm, simei, sheet.getSheetName(), "スキル列編集", "", e.oldValue, e.value, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 10);
     return;
   }
 
-  var taskname = sheet.getRange(row, 1).getDisplayValue();//タスク名
+  var taskname = sheet.getRange(row, 1).getDisplayValue();//スキル名
 
   if (col == 2) {//進捗の編集
 
@@ -47,14 +50,14 @@ function sinjin(e) {
     sheet.getRange(4, 3).setBackground(null);//白背景に
 
     //ログ→h_新人
-    var logary = [[today_ymddhm, simei, sheet.getRange(2, 2).getDisplayValue(), "習得度", taskname, e.oldValue, e.value]];
-    addLogLast(sheetlog, logary, 7);
+    var logary = [today_ymddhm, simei, sheet.getSheetName(), "習得", taskname, e.oldValue, e.value, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 10);
     return;
   }
 
   if (col == 3) {//備考欄の編集
-    var logary = [[today_ymddhm, simei, sheet.getRange(2, 2).getDisplayValue(), "備考欄の編集 " + e.oldValue + "->" + e.value + " 行：" + taskname, "", "", ""]];
-    addLogLast(sheetlog, logary, 7);
+    var logary = [today_ymddhm, simei, sheet.getSheetName(), "備考欄編集", taskname, e.oldValue, e.value, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 10);
     return;
   }
 

@@ -6,13 +6,11 @@ const gid_wtask1 = "1616634719";//週タスク１のGID
 const gid_wtask2 = "2097376321";//週タスク２
 const gid_wtask3 = "1024816661";//週タスク３
 const gid_fcheck = "1405667253";//鮮度
-const gid_h_edit = "1020343545";//h_編集数一時
+
 const gid_h_simei = "402406560";//h_氏名今日
 const gid_h_simeiNow = "2071040886";//h_氏名現在
-const gid_h_wtask = "997759008";//h_週タスク今日
+const gid_h_log = "1568642280";//h_統合ログ（管理者以外）一時
 const gid_h_place = "1413518585";//h_地図箇所
-const gid_h_fcheck = "2006815737";//h_鮮度今日
-const gid_h_sinjin = "247760006";//h_新人
 
 //本日日付定義
 //const today = new Date("2023/7/2");

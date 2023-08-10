@@ -8,7 +8,7 @@ function fcheck(e) {
   if (e.value == e.oldValue) { return; }
 
   var sheetkasyo = getSheetBySperadGid(e.source, gid_h_place);//h_地図箇所
-  var sheetlog = getSheetBySperadGid(e.source, gid_h_fcheck);//h_鮮度今日
+  var sheetlog = getSheetBySperadGid(e.source, gid_h_log);//統合ログ
 
   //氏名手動入力
   if (row == 1 && col == 8) {
@@ -28,6 +28,9 @@ function fcheck(e) {
       return;
     }
 
+    //管理者だったら、氏名以外トリガーしない
+    if (e.user.getEmail() == "youseimale@gmail.com") { return; }
+
     var taskname = sheetkasyo.getRange(row, col).getValue();
 
     //ログをメモに追加
@@ -37,8 +40,8 @@ function fcheck(e) {
     sheet.getRange(row, col).setNote(info);//誤入力のことを考えて編集可能とする
 
     //ログシートに追加
-    var logary = [[today_ymddhm, simei, row, col, taskname]];
-    addLogLast(sheetlog, logary, 5);
+    var logary = [today_ymddhm, simei, sheet.getSheetName(), "", taskname, e.oldValue, e.value, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 10);
 
     sheet.getRange(1, 10).setValue(taskname + "(" + simei + ")" + "ログ済");
     sheet.getRange(1, 10).setBackground(null);//白背景に
