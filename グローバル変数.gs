@@ -6,6 +6,7 @@ const gid_wtask1 = "1616634719";//週タスク１のGID
 const gid_wtask2 = "2097376321";//週タスク２
 const gid_wtask3 = "1024816661";//週タスク３
 const gid_fcheck = "1405667253";//鮮度
+const gid_clean = "672501890";//清掃
 
 const gid_h_simei = "402406560";//h_氏名今日
 const gid_h_simeiNow = "2071040886";//h_氏名現在

@@ -12,8 +12,8 @@ function onEdit(e) {
     wtask(e);
   }
 
-  if (gid == gid_fcheck) {//鮮度
-    fcheck(e);
+  if (gid == gid_fcheck || gid == gid_clean) {//鮮度清掃
+    kasyo_check(e);
   }
 
   if (sheetName.includes("【新】")) {//新人表用（シート名で判断）

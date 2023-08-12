@@ -1,4 +1,5 @@
-function fcheck(e) {
+//清掃、鮮度共用
+function kasyo_check(e) {
 
   var sheet = e.source.getActiveSheet();
   var row = e.range.getRow();
