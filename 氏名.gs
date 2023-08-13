@@ -1,4 +1,4 @@
-//氏名関連 オプション（未入力の場合"未入力"）、入力された氏名、スプシ、シート、氏名入力欄(rc)、通知欄(rc)
+//実行者氏名関連 オプション（未入力の場合"未入力"）、入力された氏名、スプシ、シート、氏名入力欄(rc)、通知欄(rc)
 function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
 
   var simeiRan = sheet.getRange(sR, sC);
