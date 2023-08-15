@@ -20,4 +20,8 @@ function onEdit(e) {
     sinjin(e);
   }
 
+  SpreadsheetApp.flush();//画面更新する
+
+  //Logger.log("end");
+
 }

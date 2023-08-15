@@ -21,7 +21,8 @@ function kasyo_check(e) {
   if (e.value == "実行しました。") {
 
     var simei = userProps.getProperty("simei");
-    Logger.log("getprop " + simei);
+    var simeiN = userProps.getProperty("simeiN");
+    Logger.log("getprop " + simei + " " + simeiN);
 
     if (simei == null) {//氏名未入力エラー
       sheet.getRange(row, col).setValue(e.oldValue);//元に戻す
@@ -40,9 +41,9 @@ function kasyo_check(e) {
     info = stRowCut(info, 5);
     sheet.getRange(row, col).setNote(info);//誤入力のことを考えて編集可能とする
 
-    //ログシートに追加
-    var logary = [today_ymddhm, simei, sheet.getSheetName(), "", taskname, e.oldValue, e.value, sheet.getSheetId(), row, col];
-    addLogLast(sheetlog, [logary], 10);
+    //ログシートに追加（ポイント一律）
+    var logary = [today_ymddhm, simei, simeiN, sheet.getSheetName(), "", taskname, e.oldValue, e.value, 3, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 12);
 
     sheet.getRange(1, 10).setValue(taskname + "(" + simei + ")" + "ログ済");
     sheet.getRange(1, 10).setBackground(null);//白背景に

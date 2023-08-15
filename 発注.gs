@@ -6,10 +6,10 @@ function order(e) {
   if (bgc == "#b7b7b7") { return; }//灰色ならスルー
   if (e.value == e.oldValue) { return; }
 
-  //※氏名は未入力でも発注は引継ぎ可能。（セルに入力するので。。）
-
+  //※なお氏名は未入力でも発注は引継ぎ可能。
   var simei = userProps.getProperty("simei");
-  Logger.log("getprop " + simei);
+  var simeiN = userProps.getProperty("simeiN");
+  Logger.log("getprop " + simei + " " + simeiN);
 
   //管理者だったらログもしない
   if (e.user.getEmail() == "youseimale@gmail.com") { return; }
@@ -18,9 +18,13 @@ function order(e) {
   var type = sheet.getRange(row, 1).getDisplayValue();//〆日（行）
   var taskname = sheet.getRange(2, col).getDisplayValue();//何を発注（列）
 
+  //ポイント
+  var change = 0;
+  change = quantify("発注", e.value) - quantify("発注", e.oldValue);
+
   //ログだけやっとく
-  var logary = [today_ymddhm, simei, sheet.getSheetName(), type, taskname, e.oldValue, e.value, sheet.getSheetId(), row, col];
-  addLogLast(sheetlog, [logary], 10);
+  var logary = [today_ymddhm, simei, simeiN, sheet.getSheetName(), type, taskname, e.oldValue, e.value, change, sheet.getSheetId(), row, col];
+  addLogLast(sheetlog, [logary], 12);
   return;
 
 }

@@ -7,15 +7,17 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
   var nowsheet = getSheetBySperadGid(spreadSheet, gid_h_simeiNow);//氏名現在
 
   if (opt == "未入力") {//氏名が未入力だったとき
+    //当シート
     notifyRan.setValue("氏名未入力です！" + "\n" + "(ログ未記録)");
     notifyRan.setBackground("red");//赤背景に
     Logger.log("no_simei_error");
-    var logary = [[today_ymddhm, "未入力", "", "", sheet.getSheetName()]];//ログ
-    addLogLast(logsheet, logary, 5);
+    //氏名ログ一時
+    let logary = [[today_ymddhm, "未入力", "", "", sheet.getSheetName(), ""]];//ログ
+    addLogLast(logsheet, logary, 6);
     return;
   }
 
-  if (input == null) {//nullだと.lengthがエラーになるため
+  if (input == null || input == undefined || input == "") {//だと.lengthがエラーになるため
     simeiRan.setValue("");
     notifyRan.setValue("２～８文字で指定下さい。");
     notifyRan.setBackground(null);//白背景に
@@ -36,6 +38,13 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
     return;
   }
 
+  if (input.includes("店")) {
+    simeiRan.setValue("");
+    notifyRan.setValue("文字「店」は禁止です。");
+    notifyRan.setBackground(null);//白背景に
+    return;
+  }
+
   if (input.includes("\n")) {
     simeiRan.setValue("");
     notifyRan.setValue("改行は含めないで下さい。");
@@ -45,12 +54,19 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
 
   //以下は氏名入力欄にまともに入力された場合
   var oldsimei = userProps.getProperty("simei");//ない場合nullを返す
+  var simeiN = userProps.getProperty("simeiN");//一度入力すると修正不可の番号
   Logger.log("input " + input);
   Logger.log("oldsimei " + oldsimei);
-  var dup_input = searchInCol(nowsheet, 2, input);//inputが現在氏名にあるか（あればシート行数、なければ-1）
-  var dup_oldsimei = searchInCol(nowsheet, 2, oldsimei);//oldsimeiが現在氏名にあるか（あればシート行数、なければ-1）
+  Logger.log("simeiN " + simeiN);
+  var dup_input = searchInCol(nowsheet, 2, input);//inputが現在氏名２列目にあるか（あればシート行数、なければ-1）
+  var dup_simeiN = searchInCol(nowsheet, 4, simeiN);//simeiNが現在氏名４列目にあるか（あればシート行数、なければ-1）
   Logger.log("dup_input " + dup_input);
-  Logger.log("dup_oldsimei " + dup_oldsimei);
+  Logger.log("dup_simeiN " + dup_simeiN);
+
+  //店機器だったら氏名に"店_"を付加
+  if (simeiN == 3) {
+    input = "店_" + input;
+  }
 
   if (input == oldsimei) {
     simeiRan.setValue("");
@@ -59,52 +75,69 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
     return;
   }
 
-  if (input == "null") {//氏名をリセットする
-    if (dup_oldsimei != -1) {//現在氏名シートにoldsimeiがあれば★行を削除する
-      var nowary = nowsheet.getRange(2, 1, nowsheet.getLastRow() - 1, 3).getValues();
-      nowary.splice(dup_oldsimei - 2, 1);
-      nowary.push(["", "", ""]);//削除したぶん空白行を最後に追加
-      nowsheet.getRange(2, 1, nowsheet.getLastRow() - 1, 3).setValues(nowary);//書き込み
+  if (input == "null" || input == "店_null") {//氏名をリセットする
+    //現在氏名★
+    if (dup_simeiN != -1) {//現在氏名シートにsimeiNがあれば★削除せず、simei列を""にする※４行目は不変
+      let nowary = [today_ymddhm, "", oldsimei];
+      nowsheet.getRange(dup_simeiN, 1, 1, 3).setValues([nowary]);//書き込み
     }
-    userProps.deleteProperty("simei");//simeiはnullになる。※他のユーザーまでリセットされるわけではない
+    //当シート
     simeiRan.setValue("");
     notifyRan.setValue("リセットしました。");
     notifyRan.setBackground(null);//白背景に
-    var logary = [[today_ymddhm, "リセット", oldsimei, "", sheet.getSheetName()]];//ログ
-    addLogLast(logsheet, logary, 5);
+    //氏名ログ一時
+    let logary = [[today_ymddhm, "リセット", oldsimei, "", sheet.getSheetName(), simeiN]];//ログ
+    addLogLast(logsheet, logary, 6);
+    //セット★
+    userProps.deleteProperty("simei");//simeiはnullになる。※他のユーザーまでリセットされるわけではない★simeiNは残る。
     return;
   }
 
   if (dup_input != -1) {//inputがリストにあった場合、別の氏名を要求（※oldsimeiと同一の可能性は既に排除されている）
+    //当シート
     simeiRan.setValue("");
     notifyRan.setValue("氏名（" + input + "）は既に使われています。");
     notifyRan.setBackground(null);//白背景に
-    var logary = [[today_ymddhm, "重複", oldsimei, input, sheet.getSheetName()]];//ログ
-    addLogLast(logsheet, logary, 5);
+    //氏名ログ一時
+    let logary = [[today_ymddhm, "重複", oldsimei, input, sheet.getSheetName(), simeiN]];//ログ
+    addLogLast(logsheet, logary, 6);
     return;
   }
 
-  if (dup_oldsimei != -1) {//oldsimeiがリストにあった場合、現在氏名シートを変更し、simeiを変更
-    var nowary = [today_ymddhm, input, oldsimei];
-    nowsheet.getRange(dup_oldsimei, 1, 1, 3).setValues([nowary]);//現在氏名シートの該当行を変更
+  if (dup_simeiN != -1) {//simeiNがリストにあった場合、現在氏名シートを変更し、simeiを変更
+    //現在氏名★
+    let nowary = [today_ymddhm, input, oldsimei];
+    nowsheet.getRange(dup_simeiN, 1, 1, 3).setValues([nowary]);//現在氏名シートの該当行を変更
+    //当シート
     simeiRan.setValue("");
     notifyRan.setValue("氏名変更(" + oldsimei + "→" + input + ")");
     notifyRan.setBackground(null);//白背景に
-    var logary = [[today_ymddhm, "変更", oldsimei, input, sheet.getSheetName()]];//ログ
-    addLogLast(logsheet, logary, 5);
+    //氏名ログ一時
+    let logary = [[today_ymddhm, "変更", oldsimei, input, sheet.getSheetName(), simeiN]];//ログ
+    addLogLast(logsheet, logary, 6);
+    //セット★
     userProps.setProperty("simei", input);
     return;
   }
 
-  //oldsimeiがリストに無く、simeiを新規にセットする場合
-  var nowary = [today_ymddhm, input, ""];
-  addLogLast(nowsheet, [nowary], 3);//現在リストに追加
+  //simeiNがリストに無く、simeiを新規にセットする場合
+  //まずsimeiNを決める
+  var new_simeiN = nowsheet.getLastRow();//行を消すことはないからこれなら平気
+  //現在氏名★
+  var nowary = [today_ymddhm, input, "", new_simeiN];
+  addLogLast(nowsheet, [nowary], 4);//現在リストに追加
+  //当シート
   simeiRan.setValue("");
   notifyRan.setValue("氏名新規(" + input + ")");
   notifyRan.setBackground(null);//白背景に
-  var logary = [[today_ymddhm, "新規", "", input, sheet.getSheetName()]];//ログ
-  addLogLast(logsheet, logary, 5);
+  //氏名ログ一時
+  var logary = [[today_ymddhm, "新規", "", input, sheet.getSheetName(), new_simeiN]];//ログ
+  addLogLast(logsheet, logary, 6);
+  //セット★
   userProps.setProperty("simei", input);
+  userProps.setProperty("simeiN", new_simeiN);
+
+
   return;
 
 }

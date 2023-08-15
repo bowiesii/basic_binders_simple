@@ -14,7 +14,8 @@ function sinjin(e) {
   }
 
   var simei = userProps.getProperty("simei");
-  Logger.log("getprop " + simei);
+  var simeiN = userProps.getProperty("simeiN");
+  Logger.log("getprop " + simei + " " + simeiN);
 
   if (simei == null) {//氏名未入力エラー
     sheet.getRange(row, col).setValue(e.oldValue);//元に戻す
@@ -29,8 +30,8 @@ function sinjin(e) {
   var sheetlog = getSheetBySperadGid(e.source, gid_h_log);//一時ログ
 
   if (col == 1) {//スキル列の編集
-    var logary = [today_ymddhm, simei, sheet.getSheetName(), "スキル列編集", "", e.oldValue, e.value, sheet.getSheetId(), row, col];
-    addLogLast(sheetlog, [logary], 10);
+    var logary = [today_ymddhm, simei, simeiN, sheet.getSheetName(), "スキル列編集", "", e.oldValue, e.value, 0, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 12);
     return;
   }
 
@@ -42,22 +43,28 @@ function sinjin(e) {
     var info = sheet.getRange(row, 3).getNote();
     var info2 = sheet.getRange(row, 4).getNote();
     info = today_ymddhm + " " + simei + " " + e.oldValue + "->" + e.value + "\n" + info;
-    info2 = today_ymddhm + "#" + simei + "#" + e.oldValue + "#" + e.value + "\n" + info2;//隠し列に記録
+    info2 = today_ymddhm + "#" + simei + "#" + simeiN + "#" + e.oldValue + "#" + e.value + "\n" + info2;//隠し列に記録
     Logger.log(info);
     sheet.getRange(row, 3).setNote(info);
     sheet.getRange(row, 4).setNote(info2);//隠し列
     sheet.getRange(4, 3).setValue(taskname + "(" + simei + ")" + "ログ済");
     sheet.getRange(4, 3).setBackground(null);//白背景に
 
+    //ポイント
+    var change = 0;
+    if (taskname.replace(/\s/g, "") != "") {//スキル列空白はスルー
+      change = quantify("新人", e.value) - quantify("新人", e.oldValue);
+    }
+
     //ログ→h_新人
-    var logary = [today_ymddhm, simei, sheet.getSheetName(), "習得", taskname, e.oldValue, e.value, sheet.getSheetId(), row, col];
-    addLogLast(sheetlog, [logary], 10);
+    var logary = [today_ymddhm, simei, simeiN, sheet.getSheetName(), "習得", taskname, e.oldValue, e.value, change, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 12);
     return;
   }
 
   if (col == 3) {//備考欄の編集
-    var logary = [today_ymddhm, simei, sheet.getSheetName(), "備考欄編集", taskname, e.oldValue, e.value, sheet.getSheetId(), row, col];
-    addLogLast(sheetlog, [logary], 10);
+    var logary = [today_ymddhm, simei, simeiN, sheet.getSheetName(), "備考欄編集", taskname, e.oldValue, e.value, 0, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 12);
     return;
   }
 

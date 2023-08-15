@@ -1,9 +1,63 @@
 //※シンプルトリガーは編集不可ライブラリは使えない
 
+//進捗度を数値化(タスク種別、進捗度)
+//今のところ、週タスクの棚づくりのみ
+function quantify(taskN, progN) {
+  var num = 0;
+
+  if (taskN == "【棚】") {
+    if (progN == "印刷まで") {
+      num = 0;
+    } else if (progN == "〇×まで") {
+      num = 1;
+    } else if (progN == "棚作途中") {
+      num = 2;
+    } else if (progN == "済") {
+      num = 3;
+    }
+
+  } else if (taskN == "価格変更") {
+    if (progN == "〇×まで") {
+      num = 1;
+    } else if (progN == "入替途中") {
+      num = 2;
+    } else if (progN == "済") {
+      num = 3;
+    }
+
+  } else if (taskN == "週タスクその他") {
+    if (progN == "△") {
+      num = 1;
+    } else if (progN == "済") {
+      num = 3;
+    }
+
+  } else if (taskN == "発注") {
+    if (progN != undefined) {
+      progN = progN.replace(/\s/g, "");//空白削除
+    }
+    if (progN == undefined || progN == "") {
+      num = 0;
+    } else {
+      num = 3;
+    }
+
+  } else if (taskN == "新人") {
+    if (progN == "△") {
+      num = 2;
+    } else if (progN == "〇" || progN == "◎") {
+      num = 3;
+    }
+
+  }
+
+  return num;
+}
+
 //シート内の特定列の★２行以下のなかに特定文字列があるか
-//ある→シートの行数（２～）を返す。ない→-1、stringがnull→-1
+//ある→シートの行数（２～）を返す。ない→-1、stringがnullor""→-1
 function searchInCol(sheet, col, string) {
-  if (string == null) {
+  if (string == null || striog == undefined || string == "") {//inputが空だったら問答無用で-1
     return -1;
   }
   var dataNum = sheet.getLastRow() - 1;
