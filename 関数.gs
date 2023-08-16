@@ -33,6 +33,8 @@ function shiftDN() {
     shiftName = "準夜";
   }
 
+  shiftDay = shiftDay.toString();//文字列化
+
   return { shiftDay, shiftName };
 
 }
