@@ -15,7 +15,7 @@ function order(e) {
   if (e.user.getEmail() == "youseimale@gmail.com") { return; }
 
   var sheetlog = getSheetBySperadGid(e.source, gid_h_log);//一時ログ
-  var type = sheet.getRange(row, 1).getDisplayValue();//〆日（行）
+  var type = sheet.getRange(row, 1).getDisplayValue() + "の朝〆";//〆日（行）
   var taskname = sheet.getRange(2, col).getDisplayValue();//何を発注（列）
 
   //ポイント

@@ -6,13 +6,19 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
   var logsheet = getSheetBySperadGid(spreadSheet, gid_h_simei);//氏名ログ一時
   var nowsheet = getSheetBySperadGid(spreadSheet, gid_h_simeiNow);//氏名現在
 
+  var oldsimei = userProps.getProperty("simei");//ない場合nullを返す
+  var simeiN = userProps.getProperty("simeiN");//一度入力すると修正不可の番号
+  Logger.log("input " + input);
+  Logger.log("oldsimei " + oldsimei);
+  Logger.log("simeiN " + simeiN);
+
   if (opt == "未入力") {//氏名が未入力だったとき
     //当シート
     notifyRan.setValue("氏名未入力です！" + "\n" + "(ログ未記録)");
     notifyRan.setBackground("red");//赤背景に
     Logger.log("no_simei_error");
     //氏名ログ一時
-    let logary = [[today_ymddhm, "未入力", "", "", sheet.getSheetName(), ""]];//ログ
+    let logary = [[today_ymddhm, "未入力", "", "", sheet.getSheetName(), simeiN]];//ログ
     addLogLast(logsheet, logary, 6);
     return;
   }
@@ -53,11 +59,6 @@ function simeiFunc(opt, input, spreadSheet, sheet, sR, sC, nR, nC) {
   }
 
   //以下は氏名入力欄にまともに入力された場合
-  var oldsimei = userProps.getProperty("simei");//ない場合nullを返す
-  var simeiN = userProps.getProperty("simeiN");//一度入力すると修正不可の番号
-  Logger.log("input " + input);
-  Logger.log("oldsimei " + oldsimei);
-  Logger.log("simeiN " + simeiN);
   var dup_input = searchInCol(nowsheet, 2, input);//inputが現在氏名２列目にあるか（あればシート行数、なければ-1）
   var dup_simeiN = searchInCol(nowsheet, 4, simeiN);//simeiNが現在氏名４列目にあるか（あればシート行数、なければ-1）
   Logger.log("dup_input " + dup_input);

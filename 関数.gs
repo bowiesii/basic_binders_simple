@@ -57,7 +57,7 @@ function quantify(taskN, progN) {
 //シート内の特定列の★２行以下のなかに特定文字列があるか
 //ある→シートの行数（２～）を返す。ない→-1、stringがnullor""→-1
 function searchInCol(sheet, col, string) {
-  if (string == null || striog == undefined || string == "") {//inputが空だったら問答無用で-1
+  if (string == null || string == undefined || string == "") {//inputが空だったら問答無用で-1
     return -1;
   }
   var dataNum = sheet.getLastRow() - 1;

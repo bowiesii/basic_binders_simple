@@ -22,6 +22,6 @@ function onEdit(e) {
 
   SpreadsheetApp.flush();//画面更新する
 
-  //Logger.log("end");
+  Logger.log("end");
 
 }
