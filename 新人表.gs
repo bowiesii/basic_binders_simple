@@ -6,6 +6,7 @@ function sinjin(e) {
   var bgc = sheet.getRange(row, col).getBackground();
   if (bgc == "#b7b7b7") { return; }//灰色ならスルー
   if (e.value == e.oldValue) { return; }
+  var { shiftDay, shiftName } = shiftDN();
 
   //氏名手動入力
   if (row == 4 && col == 2) {
@@ -30,8 +31,8 @@ function sinjin(e) {
   var sheetlog = getSheetBySperadGid(e.source, gid_h_log);//一時ログ
 
   if (col == 1) {//スキル列の編集
-    var logary = [today_ymddhm, simei, simeiN, sheet.getSheetName(), "スキル列編集", "", e.oldValue, e.value, 0, sheet.getSheetId(), row, col];
-    addLogLast(sheetlog, [logary], 12);
+    var logary = [today_ymddhm, shiftDay, shiftName, "", simei, simeiN, sheet.getSheetName(), "スキル列編集", "", e.oldValue, e.value, 0, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 15);
     return;
   }
 
@@ -57,14 +58,14 @@ function sinjin(e) {
     }
 
     //ログ→h_新人
-    var logary = [today_ymddhm, simei, simeiN, sheet.getSheetName(), "習得", taskname, e.oldValue, e.value, change, sheet.getSheetId(), row, col];
-    addLogLast(sheetlog, [logary], 12);
+    var logary = [today_ymddhm, shiftDay, shiftName, "", simei, simeiN, sheet.getSheetName(), "習得", taskname, e.oldValue, e.value, change, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 15);
     return;
   }
 
   if (col == 3) {//備考欄の編集
-    var logary = [today_ymddhm, simei, simeiN, sheet.getSheetName(), "備考欄編集", taskname, e.oldValue, e.value, 0, sheet.getSheetId(), row, col];
-    addLogLast(sheetlog, [logary], 12);
+    var logary = [today_ymddhm, shiftDay, shiftName, "", simei, simeiN, sheet.getSheetName(), "備考欄編集", taskname, e.oldValue, e.value, 0, sheet.getSheetId(), row, col];
+    addLogLast(sheetlog, [logary], 15);
     return;
   }
 

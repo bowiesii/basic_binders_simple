@@ -5,6 +5,7 @@ function order(e) {
   var bgc = sheet.getRange(row, col).getBackground();
   if (bgc == "#b7b7b7") { return; }//灰色ならスルー
   if (e.value == e.oldValue) { return; }
+  var { shiftDay, shiftName } = shiftDN();
 
   //※なお氏名は未入力でも発注は引継ぎ可能。
   var simei = userProps.getProperty("simei");
@@ -23,8 +24,8 @@ function order(e) {
   change = quantify("発注", e.value) - quantify("発注", e.oldValue);
 
   //ログだけやっとく
-  var logary = [today_ymddhm, simei, simeiN, sheet.getSheetName(), type, taskname, e.oldValue, e.value, change, sheet.getSheetId(), row, col];
-  addLogLast(sheetlog, [logary], 12);
+  var logary = [today_ymddhm, shiftDay, shiftName, "", simei, simeiN, sheet.getSheetName(), type, taskname, e.oldValue, e.value, change, sheet.getSheetId(), row, col];
+  addLogLast(sheetlog, [logary], 15);
   return;
 
 }

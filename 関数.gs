@@ -1,5 +1,42 @@
 //※シンプルトリガーは編集不可ライブラリは使えない
 
+//ユーザーの記録日時からシフト日をシフト種別を決定
+//早朝：６～９時５９分
+//午前：１０～１３時５９分
+//午後：１４～１７時５９分
+//夕勤：１８～２２時５９分
+//準夜：２３～翌５時５９分
+//入力＝Date型
+function shiftDN() {
+
+  var shiftDay = today_ymdd;
+  var shiftName = "";
+  var hh = Utilities.formatDate(today, 'JST', 'HH');
+
+  if (hh <= 5) {//準夜、日付マイナス１
+    shiftName = "準夜";
+    var today_1 = new Date(today);
+    today_1.setDate(today_1.getDate() - 1);//昨日にする
+    today_1_ymd = Utilities.formatDate(today_1, "JST", "yyyy/MM/dd");
+    var today_1_wjpn = wary[today_1.getDay()];
+    shiftDay = today_1_ymd + " " + today_1_wjpn;
+
+  } else if (hh <= 9) {//早朝
+    shiftName = "早朝";
+  } else if (hh <= 13) {//午前
+    shiftName = "午前";
+  } else if (hh <= 17) {//午後
+    shiftName = "午後";
+  } else if (hh <= 22) {//夕勤
+    shiftName = "夕勤";
+  } else if (hh <= 23) {//準夜
+    shiftName = "準夜";
+  }
+
+  return { shiftDay, shiftName };
+
+}
+
 //進捗度を数値化(タスク種別、進捗度)
 //今のところ、週タスクの棚づくりのみ
 function quantify(taskN, progN) {

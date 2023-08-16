@@ -14,7 +14,7 @@ const gid_h_log = "1568642280";//h_統合ログ（管理者以外）一時
 const gid_h_place = "1413518585";//h_地図箇所
 
 //本日日付定義
-//const today = new Date("2023/7/2");
+//const today = new Date("2023/8/1 9:59");
 //やっぱり本当の日付
 const today = new Date();
 const todayYear = today.getFullYear();
@@ -28,6 +28,7 @@ const today_hm = Utilities.formatDate(today, 'JST', 'HH:mm');
 const today_ymddhm = today_ymdd + " " + today_hm;
 
 const userProps = PropertiesService.getUserProperties();
+
 
 
 
