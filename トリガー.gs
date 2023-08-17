@@ -1,27 +1,45 @@
+//編集トリガー
 function onEdit(e) {
 
   var sheetName = e.source.getSheetName();
-  var gid = getGIDbysheetname(e.source, sheetName);//e.sourceはこのスプレッドリートオブジェクト
+  var gid = getGIDbysheetname(e.source, sheetName);//※e.sourceはこのスプレッドリートオブジェクト
 
-  //ソースのシートgidで振り分け
-  if (gid == gid_simei) {//氏名入力
-    simei(e);
+  var simei = userProps.getProperty("simei");
+  var simeiN = userProps.getProperty("simeiN");
+  Logger.log("getprop " + simei + " " + simeiN);
+
+  if (gid == gid_simei) {//氏名シートだった場合
+    simeiFunc(e, simei, simeiN);
+    return;
+  }
+
+  //管理者だったら、氏名シート以外トリガーしない
+  if (e.user.getEmail() == "youseimale@gmail.com") {
+    return;
+  }
+
+  if (simei == null) {//氏名未入力エラー
+    e.range.setValue(e.oldValue);//★元に戻す
+    Logger.log("no_simei_error");
+    let logary = [[today_ymddhm, "未入力", "", "", e.source.getActiveSheet().getSheetName(), simeiN]];//氏名ログ一時
+    addLogLast(getSheetBySperadGid(e.source, gid_h_simei), logary, 6);
+    return;
   }
 
   if (gid == gid_order) {//発注
-    order(e);
+    order(e, simei, simeiN);
   }
 
   if (gid == gid_wtask1 || gid == gid_wtask2 || gid == gid_wtask3) {//週タスク
-    wtask(e);
+    wtask(e, simei, simeiN);
   }
 
   if (gid == gid_fcheck || gid == gid_clean) {//鮮度清掃
-    kasyo_check(e);
+    kasyo_check(e, simei, simeiN);
   }
 
   if (sheetName.includes("【新】")) {//新人表用（シート名で判断）
-    sinjin(e);
+    sinjin(e, simei, simeiN);
   }
 
   SpreadsheetApp.flush();//画面更新する
