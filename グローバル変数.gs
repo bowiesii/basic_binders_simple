@@ -1,5 +1,6 @@
 //基本バインダー
 const id_bb = "1sEKCFs6oNzbEkRgt2Z2aq_4mOGQXMU7dcFTXPNYf-wg";
+const gid_simei = "1053431021";//氏名入力
 const gid_order = "648587868";//発注
 const gid_orderOld = "318850821";//発注（古）
 const gid_wtask1 = "1616634719";//週タスク１のGID

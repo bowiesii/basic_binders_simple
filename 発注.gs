@@ -2,8 +2,6 @@ function order(e) {
   var sheet = e.source.getActiveSheet();
   var row = e.range.getRow();
   var col = e.range.getColumn();
-  var bgc = sheet.getRange(row, col).getBackground();
-  if (bgc == "#b7b7b7") { return; }//灰色ならスルー
   if (e.value == e.oldValue) { return; }
   var { shiftDay, shiftName } = shiftDN();
 

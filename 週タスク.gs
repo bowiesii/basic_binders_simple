@@ -3,18 +3,10 @@ function wtask(e) {
   var sheet = e.source.getActiveSheet();
   var row = e.range.getRow();
   var col = e.range.getColumn();
-  var bgc = sheet.getRange(row, col).getBackground();
-  if (bgc == "#b7b7b7") { return; }//灰色ならスルー
   if (e.value == e.oldValue) { return; }
   var { shiftDay, shiftName } = shiftDN();
 
   var sheetlog = getSheetBySperadGid(e.source, gid_h_log);//統合ログ
-
-  //氏名手動入力
-  if (row == 5 && col == 2) {
-    simeiFunc("", e.value, e.source, sheet, 5, 2, 5, 3);
-    return;
-  }
 
   var simei = userProps.getProperty("simei");
   var simeiN = userProps.getProperty("simeiN");
@@ -22,7 +14,10 @@ function wtask(e) {
 
   if (simei == null) {//氏名未入力エラー
     sheet.getRange(row, col).setValue(e.oldValue);//元に戻す
-    simeiFunc("未入力", "", e.source, sheet, 5, 2, 5, 3);
+    Logger.log("no_simei_error");
+    //氏名ログ一時
+    let logary = [[today_ymddhm, "未入力", "", "", sheet.getSheetName(), simeiN]];//ログ
+    addLogLast(getSheetBySperadGid(e.source, gid_h_simei), logary, 6);
     return;
   }
 
@@ -41,14 +36,9 @@ function wtask(e) {
 
     //ログ→当該シートのメモ
     var info = sheet.getRange(row, 3).getNote();
-    var info2 = sheet.getRange(row, 4).getNote();
     info = today_ymddhm + " " + simei + " " + e.oldValue + "->" + e.value + "\n" + info;
-    info2 = today_ymddhm + "#" + simei + "#" + simeiN + "#" + e.oldValue + "#" + e.value + "\n" + info2;//隠し列に記録
     Logger.log(info);
     sheet.getRange(row, 3).setNote(info);
-    sheet.getRange(row, 4).setNote(info2);//隠し列
-    sheet.getRange(5, 3).setValue(taskname + "(" + simei + ")" + "ログ済");
-    sheet.getRange(5, 3).setBackground(null);//白背景に
 
     //ポイントを計算
     var change = 0;

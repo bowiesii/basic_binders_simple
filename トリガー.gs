@@ -4,6 +4,10 @@ function onEdit(e) {
   var gid = getGIDbysheetname(e.source, sheetName);//e.sourceはこのスプレッドリートオブジェクト
 
   //ソースのシートgidで振り分け
+  if (gid == gid_simei) {//氏名入力
+    simei(e);
+  }
+
   if (gid == gid_order) {//発注
     order(e);
   }
