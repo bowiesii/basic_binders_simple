@@ -223,3 +223,21 @@ function getSheetByUrl(url) {
 
   return null
 }
+
+
+// 英数字を全角から半角に変換
+function convertCharacters(original) {
+  let converted = ""; // 空の変数
+  const pattern = /[Ａ-Ｚａ-ｚ０-９]/; // 全角英数のパターンを用意
+  for (let i = 0; i < original.length; i++) { // 受け取った文字列の数だけ繰り返し
+    if (pattern.test(original[i])) { // 文字が全角英数のとき
+      const half = String.fromCharCode(original[i].charCodeAt(0) - 65248); // 半角英数に変換
+      converted += half;
+    } else {
+      converted += original[i];
+    }
+  }
+  converted = converted.replace(/　/g, ' ').replace(/．/g, '.'); // gオプションで該当文字列をすべて置換
+  // Logger.log(converted);
+  return converted;
+}
