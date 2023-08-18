@@ -1,6 +1,11 @@
 //編集トリガー
 function onEdit(e) {
 
+  //管理者だったらトリガーしない
+  if (e.user.getEmail() == "youseimale@gmail.com") {
+    return;
+  }
+
   var sheetName = e.source.getSheetName();
   var gid = getGIDbysheetname(e.source, sheetName);//※e.sourceはこのスプレッドリートオブジェクト
 
@@ -10,11 +15,6 @@ function onEdit(e) {
 
   if (gid == gid_simei) {//氏名シートだった場合
     simeiFunc(e, simei, simeiN);
-    return;
-  }
-
-  //管理者だったら、氏名シート以外トリガーしない
-  if (e.user.getEmail() == "youseimale@gmail.com") {
     return;
   }
 
